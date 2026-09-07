@@ -79,7 +79,7 @@ test("RPC wrapper avoids per-chunk idle and running-state maintenance", async ()
 
 test("normal session teardown paths use graceful extension shutdown", async () => {
   const source = await readFile(RUNTIME_URL, "utf8");
-  const deleteRouteSource = await readFile(new URL("../app/api/sessions/[id]/route.ts", import.meta.url), "utf8");
+  const deleteRouteSource = await readFile(new URL("../packages/pi-backend/sessions.ts", import.meta.url), "utf8");
   const trustRouteSource = await readFile(new URL("../app/api/project-trust/route.ts", import.meta.url), "utf8");
   const idleSource = source.slice(
     source.indexOf("  private resetIdleTimer"),
@@ -92,7 +92,7 @@ test("normal session teardown paths use graceful extension shutdown", async () =
 
   assert.match(idleSource, /this\.shutdown\(\)/);
   assert.match(forkSource, /await this\.shutdown\(\)/);
-  assert.match(deleteRouteSource, /await getRpcSession\(id\)\?\.shutdown\(\)/);
+  assert.match(deleteRouteSource, /await runtime\.getSession\(id\)\?\.shutdown\(\)/);
   assert.match(trustRouteSource, /await destroyRpcSessionsForCwd\(result\.cwd\)/);
 });
 

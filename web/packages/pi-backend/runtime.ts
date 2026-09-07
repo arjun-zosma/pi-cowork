@@ -7,7 +7,7 @@ import { existsSync, writeFileSync } from "fs";
 import { validateAgentImages } from "../../lib/image-attachments";
 import { invalidateModelsCache } from "../../lib/models-cache";
 import { createProjectCommandBashOperations } from "../../lib/project-command-env";
-import { cacheSessionPath, invalidateSessionListCache } from "../../lib/session-reader";
+import { cacheSessionPath, invalidateSessionListCache } from "./sessions";
 import { getProjectTrustStatus } from "../../lib/project-trust";
 import type { AgentSessionLike, ExtensionUiContextLike, ToolInfo } from "../../lib/pi-types";
 import type { ExtensionUiRequest, ExtensionUiResponse, ExtensionWidgetItem } from "../../lib/types";

@@ -11,7 +11,7 @@ import { resolve } from "path";
 import { invalidateModelsCache } from "../../lib/models-cache";
 import { resolveVisibleModels, selectInitialModelScope } from "../../lib/model-scope";
 import { createProjectCommandBashExtension, preferUserBashExtension } from "../../lib/project-command-env";
-import { cacheSessionPath } from "../../lib/session-reader";
+import { cacheSessionPath } from "./sessions";
 import { projectTrustReloadOptions } from "../../lib/project-trust";
 import { persistExplicitStartupPreferences } from "../../lib/startup-preferences";
 import type { AgentSessionLike } from "../../lib/pi-types";
