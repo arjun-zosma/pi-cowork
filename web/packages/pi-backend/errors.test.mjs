@@ -36,6 +36,8 @@ test("backend error codes match the approved v1 contract", () => {
     "session_busy",
     "prompt_rejected",
     "model_not_found",
+    "entry_not_found",
+    "thinking_block_not_found",
     "startup_failed",
     "internal_error",
   ]);

@@ -289,3 +289,46 @@ test("autoNameSession rejects unknown sessions as session_not_found", async () =
     (error) => error instanceof Error && error.code === "session_not_found",
   );
 });
+
+test("getSessionThinking rejects a missing assistant entry as entry_not_found", async () => {
+  resetListState();
+  const dir = mkdtempSync(join(tmpdir(), "pi-backend-sessions-entry-"));
+  try {
+    const filePath = writeSession(dir, "session.jsonl", "thinking-session");
+    cacheSessionPath("thinking-session", filePath);
+    await assert.rejects(
+      getSessionThinking({ sessionId: "thinking-session", entryId: "missing-entry", blockIndex: 0 }),
+      (error) => error instanceof Error
+        && error.code === "entry_not_found"
+        && error.message === "Assistant message not found",
+    );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("getSessionThinking rejects a non-thinking block as thinking_block_not_found", async () => {
+  resetListState();
+  const dir = mkdtempSync(join(tmpdir(), "pi-backend-sessions-block-"));
+  try {
+    const filePath = join(dir, "session.jsonl");
+    writeFileSync(
+      filePath,
+      `${JSON.stringify({ type: "session", version: 3, id: "thinking-session", timestamp: "2026-01-01T00:00:00.000Z", cwd: dir })}\n${JSON.stringify({
+        type: "message",
+        id: "a1",
+        timestamp: "2026-01-01T00:00:00.100Z",
+        message: { role: "assistant", content: [{ type: "text", text: "hi" }], timestamp: "2026-01-01T00:00:00.100Z" },
+      })}\n`,
+    );
+    cacheSessionPath("thinking-session", filePath);
+    await assert.rejects(
+      getSessionThinking({ sessionId: "thinking-session", entryId: "a1", blockIndex: 0 }),
+      (error) => error instanceof Error
+        && error.code === "thinking_block_not_found"
+        && error.message === "Thinking block not found",
+    );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

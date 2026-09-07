@@ -611,14 +611,12 @@ export async function getSessionThinking(
     throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
   }
   if (!entry || entry.type !== "message" || entry.message.role !== "assistant") {
-    // ponytail: "session_not_found" is the closest stable code and maps to the
-    // preserved 404; Phase 4 assigns precise read-contract codes.
-    throw new BackendError("session_not_found", "Assistant message not found");
+    throw new BackendError("entry_not_found", "Assistant message not found");
   }
 
   const block = entry.message.content[blockIndex];
   if (!block || block.type !== "thinking") {
-    throw new BackendError("session_not_found", "Thinking block not found");
+    throw new BackendError("thinking_block_not_found", "Thinking block not found");
   }
 
   return { thinking: block.thinking };
