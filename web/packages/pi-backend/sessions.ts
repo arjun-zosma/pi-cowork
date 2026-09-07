@@ -421,42 +421,46 @@ export async function getSessionDetails(
     throw new BackendError("session_not_found", "Session not found");
   }
 
-  const sm = liveRpc?.inner.sessionManager ?? SessionManager.open(resolvedPath!);
-  const filePath = liveRpc?.sessionFile || sm.getSessionFile() || resolvedPath || "";
-  const entries = sm.getEntries();
-  const leafId = sm.getLeafId();
-  const tree = projectTreeForResponse(sm.getTree()) as SessionTreeNode[];
-  const deferThinking = input.deferThinking ?? false;
-  const deferToolResultImages = input.deferMedia ?? false;
-  const context = buildSessionContext(entries as never, leafId, { deferThinking, deferToolResultImages });
-  const totalActiveMs = computeSessionTotalActiveMs(entries);
+  try {
+    const sm = liveRpc?.inner.sessionManager ?? SessionManager.open(resolvedPath!);
+    const filePath = liveRpc?.sessionFile || sm.getSessionFile() || resolvedPath || "";
+    const entries = sm.getEntries();
+    const leafId = sm.getLeafId();
+    const tree = projectTreeForResponse(sm.getTree()) as SessionTreeNode[];
+    const deferThinking = input.deferThinking ?? false;
+    const deferToolResultImages = input.deferMedia ?? false;
+    const context = buildSessionContext(entries as never, leafId, { deferThinking, deferToolResultImages });
+    const totalActiveMs = computeSessionTotalActiveMs(entries);
 
-  const header = sm.getHeader();
-  let modified = header?.timestamp ?? new Date().toISOString();
-  try { modified = statSync(filePath).mtime.toISOString(); } catch { /* use header timestamp */ }
-  const parentSessionId = header?.parentSession
-    ? await resolveSessionIdByPath(header.parentSession)
-    : undefined;
-  const info = header ? {
-    path: filePath,
-    id: header.id,
-    cwd: header.cwd ?? "",
-    name: sm.getSessionName(),
-    created: header.timestamp,
-    modified,
-    messageCount: context.messages.length,
-    firstMessage: context.messages.find((m) => m.role === "user")
-      ? (() => {
-          const msg = context.messages.find((m) => m.role === "user")!;
-          const c = (msg as { content: unknown }).content;
-          return typeof c === "string" ? c : (Array.isArray(c) ? (c.find((b: { type: string }) => b.type === "text") as { text: string } | undefined)?.text ?? "" : "") || "(no messages)";
-        })()
-      : "(no messages)",
-    parentSessionId,
-    transient: !filePath || !existsSync(filePath),
-  } : null;
+    const header = sm.getHeader();
+    let modified = header?.timestamp ?? new Date().toISOString();
+    try { modified = statSync(filePath).mtime.toISOString(); } catch { /* use header timestamp */ }
+    const parentSessionId = header?.parentSession
+      ? await resolveSessionIdByPath(header.parentSession)
+      : undefined;
+    const info = header ? {
+      path: filePath,
+      id: header.id,
+      cwd: header.cwd ?? "",
+      name: sm.getSessionName(),
+      created: header.timestamp,
+      modified,
+      messageCount: context.messages.length,
+      firstMessage: context.messages.find((m) => m.role === "user")
+        ? (() => {
+            const msg = context.messages.find((m) => m.role === "user")!;
+            const c = (msg as { content: unknown }).content;
+            return typeof c === "string" ? c : (Array.isArray(c) ? (c.find((b: { type: string }) => b.type === "text") as { text: string } | undefined)?.text ?? "" : "") || "(no messages)";
+          })()
+        : "(no messages)",
+      parentSessionId,
+      transient: !filePath || !existsSync(filePath),
+    } : null;
 
-  return { sessionId: id, filePath, info, leafId, tree, context, totalActiveMs };
+    return { sessionId: id, filePath, info, leafId, tree, context, totalActiveMs };
+  } catch (error) {
+    throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
+  }
 }
 
 export async function getSessionContext(
@@ -471,11 +475,15 @@ export async function getSessionContext(
     throw new BackendError("session_not_found", "Session not found");
   }
 
-  const sm = liveRpc?.inner.sessionManager ?? SessionManager.open(filePath!);
-  return buildSessionContext(sm.getEntries() as never, input.leafId, {
-    deferThinking: input.deferThinking ?? false,
-    deferToolResultImages: input.deferMedia ?? false,
-  });
+  try {
+    const sm = liveRpc?.inner.sessionManager ?? SessionManager.open(filePath!);
+    return buildSessionContext(sm.getEntries() as never, input.leafId, {
+      deferThinking: input.deferThinking ?? false,
+      deferToolResultImages: input.deferMedia ?? false,
+    });
+  } catch (error) {
+    throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
+  }
 }
 
 export async function renameSession(input: UpdateSessionInput): Promise<SessionMutationResponse> {
@@ -488,8 +496,12 @@ export async function renameSession(input: UpdateSessionInput): Promise<SessionM
   if (!filePath) {
     throw new BackendError("session_not_found", "Session not found");
   }
-  const sm = SessionManager.open(filePath);
-  sm.appendSessionInfo(input.name.trim());
+  try {
+    const sm = SessionManager.open(filePath);
+    sm.appendSessionInfo(input.name.trim());
+  } catch (error) {
+    throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
+  }
   invalidateSessionListCache();
   return { success: true, sessionId: input.sessionId };
 }
@@ -532,8 +544,12 @@ export async function deleteSession(
     }
   } catch { /* skip if dir unreadable */ }
 
-  await runtime.getSession(id)?.shutdown();
-  unlinkSync(filePath);
+  try {
+    await runtime.getSession(id)?.shutdown();
+    unlinkSync(filePath);
+  } catch (error) {
+    throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
+  }
   invalidateSessionPathCache(id);
   invalidateSessionListCache();
   return { success: true, sessionId: id };
@@ -557,7 +573,12 @@ export async function autoNameSession(
   // globalThis keeps wrappers alive across dev hot reloads; older instances
   // may predate waitUntilReady(), but those have already completed startup.
   await session.waitUntilReady?.();
-  const result = await generateSessionTitle(session.inner as unknown as AgentSession);
+  let result;
+  try {
+    result = await generateSessionTitle(session.inner as unknown as AgentSession);
+  } catch (error) {
+    throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
+  }
 
   if (!session.isAlive()) {
     throw new BackendError(
@@ -583,7 +604,12 @@ export async function getSessionThinking(
   if (!filePath) throw new BackendError("session_not_found", "Session not found");
 
   // SessionManager-backed parsing preserves the SDK's malformed-line tolerance.
-  const entry = getSessionEntries(filePath).find((candidate) => candidate.id === entryId);
+  let entry: SessionEntry | undefined;
+  try {
+    entry = getSessionEntries(filePath).find((candidate) => candidate.id === entryId);
+  } catch (error) {
+    throw new BackendError("internal_error", error instanceof Error ? error.message : String(error));
+  }
   if (!entry || entry.type !== "message" || entry.message.role !== "assistant") {
     // ponytail: "session_not_found" is the closest stable code and maps to the
     // preserved 404; Phase 4 assigns precise /api/v1 codes for the read contract.
