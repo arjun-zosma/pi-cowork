@@ -55,10 +55,11 @@ test("RPC session startup opens an existing session file only once and trusts it
 });
 
 test("RPC wrapper avoids per-chunk idle and running-state maintenance", async () => {
+  const wrapperSource = await readFile(new URL("../packages/pi-backend/runtime.ts", import.meta.url), "utf8");
   const source = await readFile(new URL("./rpc-manager.ts", import.meta.url), "utf8");
-  const startSource = source.slice(
-    source.indexOf("  start(): void"),
-    source.indexOf("  setForceEmptySystemPrompt"),
+  const startSource = wrapperSource.slice(
+    wrapperSource.indexOf("  start(): void"),
+    wrapperSource.indexOf("  setForceEmptySystemPrompt"),
   );
   const notifySource = source.slice(
     source.indexOf("export function notifyRunningChange"),
@@ -73,7 +74,7 @@ test("RPC wrapper avoids per-chunk idle and running-state maintenance", async ()
 });
 
 test("normal session teardown paths use graceful extension shutdown", async () => {
-  const source = await readFile(new URL("./rpc-manager.ts", import.meta.url), "utf8");
+  const source = await readFile(new URL("../packages/pi-backend/runtime.ts", import.meta.url), "utf8");
   const deleteRouteSource = await readFile(new URL("../app/api/sessions/[id]/route.ts", import.meta.url), "utf8");
   const trustRouteSource = await readFile(new URL("../app/api/project-trust/route.ts", import.meta.url), "utf8");
   const idleSource = source.slice(
@@ -123,7 +124,7 @@ test("RPC session startup persists explicit preferences without replaying setter
 });
 
 test("custom extension UI receives the fixed headless terminal facade", async () => {
-  const source = await readFile(new URL("./rpc-manager.ts", import.meta.url), "utf8");
+  const source = await readFile(new URL("../packages/pi-backend/runtime.ts", import.meta.url), "utf8");
   const customUiSource = source.slice(
     source.indexOf("private requestExtensionCustomUi"),
     source.indexOf("private requestExtensionUi"),
@@ -134,7 +135,7 @@ test("custom extension UI receives the fixed headless terminal facade", async ()
 });
 
 test("reloading a session invalidates the models cache", async () => {
-  const source = await readFile(new URL("./rpc-manager.ts", import.meta.url), "utf8");
+  const source = await readFile(new URL("../packages/pi-backend/runtime.ts", import.meta.url), "utf8");
   const reloadSource = source.slice(
     source.indexOf('case "reload"'),
     source.indexOf('case "abort_compaction"'),
