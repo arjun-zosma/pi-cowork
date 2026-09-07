@@ -138,10 +138,10 @@ interface PiBackend {
   deleteSession(input: SessionIdInput): Promise<SessionMutationResponse>;
   getSessionState(input: SessionIdInput): Promise<AgentStateResponse>;
 
-  prompt(input: PromptInput): Promise<CommandAcceptedResponse>;
+  prompt(input: SessionIdInput & PromptInput): Promise<CommandAcceptedResponse>;
   abort(input: SessionIdInput): Promise<CommandAcceptedResponse>;
-  steer(input: MessageCommandInput): Promise<CommandAcceptedResponse>;
-  followUp(input: MessageCommandInput): Promise<CommandAcceptedResponse>;
+  steer(input: SessionIdInput & MessageCommandInput): Promise<CommandAcceptedResponse>;
+  followUp(input: SessionIdInput & MessageCommandInput): Promise<CommandAcceptedResponse>;
 
   subscribeToSession(
     input: SessionIdInput,
@@ -303,7 +303,7 @@ interface ModelsResponse {
   thinkingLevelMaps: Record<string, Record<string, string | null>>;
   thinkingLevelPins: Record<string, string>;
   modelScopeWarnings?: string[];
-  error?: string;
+  modelError?: string;
 }
 
 interface SessionsResponse {
@@ -338,6 +338,7 @@ interface AgentStateResponse {
   autoCompactionEnabled?: boolean;
   autoRetryEnabled?: boolean;
   model?: { id: string; provider: string };
+  messageCount?: number;
   pendingMessageCount?: number;
   queuedMessages?: { steering: string[]; followUp: string[] };
   contextUsage?: { percent: number | null; contextWindow: number; tokens: number | null } | null;
