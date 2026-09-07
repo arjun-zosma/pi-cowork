@@ -1,5 +1,4 @@
 import type {
-  AgentMessage,
   ExtensionStatusItem,
   ExtensionWidgetItem,
   SessionContext,
