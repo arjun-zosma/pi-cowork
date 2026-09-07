@@ -8,12 +8,12 @@ import {
 } from "@earendil-works/pi-coding-agent";
 import { existsSync, realpathSync } from "fs";
 import { resolve } from "path";
-import { invalidateModelsCache } from "../../lib/models-cache";
-import { resolveVisibleModels, selectInitialModelScope } from "../../lib/model-scope";
+import { invalidateModelsCache } from "./models";
+import { resolveVisibleModels, selectInitialModelScope } from "./models";
 import { createProjectCommandBashExtension, preferUserBashExtension } from "../../lib/project-command-env";
 import { cacheSessionPath } from "./sessions";
 import { projectTrustReloadOptions } from "../../lib/project-trust";
-import { persistExplicitStartupPreferences } from "../../lib/startup-preferences";
+import { persistExplicitStartupPreferences } from "./models";
 import type { AgentSessionLike } from "../../lib/pi-types";
 import type { SessionInfo, SessionMessageEntry } from "../../lib/types";
 import { AgentSessionWrapper } from "./runtime";

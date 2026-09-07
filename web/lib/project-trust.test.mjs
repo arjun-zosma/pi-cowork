@@ -86,7 +86,7 @@ test("all project resource loaders and reloads enforce project trust", async () 
     new URL("../packages/pi-backend/runtime.ts", import.meta.url),
     "utf8",
   );
-  const modelsSource = await readFile(new URL("../app/api/models/route.ts", import.meta.url), "utf8");
+  const modelsSource = await readFile(new URL("../packages/pi-backend/models.ts", import.meta.url), "utf8");
   const skillsSource = await readFile(new URL("./skills-service.ts", import.meta.url), "utf8");
   const skillsInstallSource = await readFile(new URL("../app/api/skills/install/route.ts", import.meta.url), "utf8");
   const pluginsSource = await readFile(new URL("../app/api/plugins/route.ts", import.meta.url), "utf8");

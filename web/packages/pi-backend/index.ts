@@ -2,6 +2,7 @@ import type {
   AutoNameResponse,
   CapabilitiesResponse,
   HealthResponse,
+  ListModelsInput,
   ListSessionsInput,
   SessionContext,
   SessionDetailsResponse,
@@ -9,6 +10,7 @@ import type {
   SessionMutationResponse,
   SessionsResponse,
   UpdateSessionInput,
+  ModelsResponse,
 } from "./contracts";
 import {
   autoNameSession as autoNameSessionFromServices,
@@ -19,6 +21,7 @@ import {
   listSessions as listSessionsFromServices,
   renameSession as renameSessionFromServices,
 } from "./sessions";
+import { getModels as getModelsFromServices } from "./models";
 import { getRuntimeManager } from "../../lib/runtime-state";
 import type { RuntimeManager } from "./runtime-manager";
 
@@ -38,6 +41,7 @@ export interface PiBackend {
   renameSession(input: UpdateSessionInput): Promise<SessionMutationResponse>;
   deleteSession(input: SessionIdInput): Promise<SessionMutationResponse>;
   autoNameSession(input: SessionIdInput): Promise<AutoNameResponse>;
+  getModels(input: ListModelsInput): Promise<ModelsResponse>;
   getSessionThinking(
     input: SessionIdInput & { entryId: string; blockIndex: number },
   ): Promise<{ thinking: string }>;
@@ -98,6 +102,9 @@ export function createPiBackend(options: CreatePiBackendOptions): PiBackend {
     },
     getSessionThinking(input) {
       return getSessionThinkingFromServices(input);
+    },
+    getModels(input) {
+      return getModelsFromServices(input.cwd);
     },
   };
 }

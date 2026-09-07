@@ -5,7 +5,7 @@ import { KeybindingsManager as TuiKeybindingsManager, TUI_KEYBINDINGS } from "@e
 import { randomUUID } from "crypto";
 import { existsSync, writeFileSync } from "fs";
 import { validateAgentImages } from "../../lib/image-attachments";
-import { invalidateModelsCache } from "../../lib/models-cache";
+import { invalidateModelsCache } from "./models";
 import { createProjectCommandBashOperations } from "../../lib/project-command-env";
 import { cacheSessionPath, invalidateSessionListCache } from "./sessions";
 import { getProjectTrustStatus } from "../../lib/project-trust";
