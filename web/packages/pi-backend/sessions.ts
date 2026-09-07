@@ -612,7 +612,7 @@ export async function getSessionThinking(
   }
   if (!entry || entry.type !== "message" || entry.message.role !== "assistant") {
     // ponytail: "session_not_found" is the closest stable code and maps to the
-    // preserved 404; Phase 4 assigns precise /api/v1 codes for the read contract.
+    // preserved 404; Phase 4 assigns precise read-contract codes.
     throw new BackendError("session_not_found", "Assistant message not found");
   }
 
