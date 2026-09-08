@@ -25,7 +25,7 @@ Zosma Cowork is an **MIT-licensed, work-focused AI agent platform**. It gives pe
 
 Cowork is built for more than software development. It is intended for finance, operations, research, sales, support, administration, and engineering teams working with files, applications, business systems, and repeatable processes.
 
-> **Project status:** Cowork already ships a capable local, Pi-powered application. We are now rebuilding its architecture around a TypeScript machine daemon, central control plane, Next.js web app, Expo mobile app, and Electron desktop app. The checklist below distinguishes shipped functionality from work in progress and planned work.
+> **Project status:** Cowork already ships a capable local, Pi-powered application. We are now rebuilding its architecture around a TypeScript machine daemon, central control plane, Next.js web app, Expo mobile app, and Tauri desktop app. The checklist below distinguishes shipped functionality from work in progress and planned work.
 
 <img src="./assets/demo.png" width="100%" alt="Zosma Cowork processing business documents with an AI agent" />
 
@@ -54,7 +54,7 @@ People use the web, mobile, or desktop app to start work, monitor sessions, answ
 flowchart LR
     W[Next.js Web] --> B[TypeScript Control Plane]
     M[Expo Mobile] --> B
-    E[Electron Desktop<br/>bundles the Next.js app] --> B
+    E[Tauri Desktop<br/>bundles the Next.js app] --> B
     B <--> D[TypeScript Machine Daemon]
     E -. local mode .-> D
     D --> PI[Pi]
@@ -100,7 +100,7 @@ The target monorepo has three user-facing applications:
 apps/
 ├── web/       # Next.js web application
 ├── app/       # React Native application built with Expo
-└── desktop/   # Electron shell that bundles and renders apps/web
+└── desktop/   # Tauri shell that bundles and renders apps/web
 ```
 
 ### Web
@@ -113,7 +113,7 @@ The Expo application provides native mobile sessions, push notifications, voice 
 
 ### Desktop
 
-The Electron application does not maintain a second frontend. In development it loads `apps/web`; release builds bundle the Next.js standalone server and machine daemon, supervise both processes, and render the local Next.js application in an Electron window.
+The Tauri application does not maintain a second frontend. In development it loads `apps/web`; release builds bundle the Next.js standalone server and machine daemon, supervise both processes, and render the local Next.js application in an Tauri window.
 
 ## Target repository structure
 
@@ -122,7 +122,7 @@ zosma-cowork/
 ├── apps/
 │   ├── web/                  # Next.js
 │   ├── app/                  # React Native + Expo
-│   └── desktop/              # Electron; bundles apps/web and daemon/
+│   └── desktop/              # Tauri; bundles apps/web and daemon/
 ├── backend/                  # TypeScript control plane: HTTP, realtime, teams, policy
 ├── daemon/                   # TypeScript service installed on each machine
 ├── packages/
@@ -203,9 +203,9 @@ The roadmap describes product capability, not just repository shape. A checked i
 ### Phase 4 — New application monorepo
 
 - [ ] Move the product UI into `apps/web`
-- [ ] Build `apps/desktop` with Electron
-- [ ] Bundle and supervise the Next.js server and daemon from Electron
-- [ ] Replace the legacy Tauri desktop shell
+- [ ] Build `apps/desktop` with Tauri
+- [ ] Bundle and supervise the Next.js server and daemon from Tauri
+- [ ] Rebuild the legacy desktop shell into apps/desktop (Tauri)
 - [ ] Build the React Native Expo application in `apps/app`
 - [ ] Add native push notifications, deep links, secure storage, and voice input
 - [ ] Share protocol and API clients without forcing shared web/native UI components
