@@ -85,9 +85,9 @@ Harness adapters only translate between native harness protocols and Cowork's pr
 
 ### Pi-first, not Pi-only
 
-[Pi](https://github.com/earendil-works/pi-coding-agent) remains Cowork's first-class runtime. Existing Pi extensions, skills, prompts, providers, steering, session trees, and deeper runtime controls will remain available.
+Cowork plans to support multiple agent harnesses, chosen per employee's job type and the work they do — starting with our favourite, the Pi Coding Agent. Pi remains Cowork's first-class runtime: existing Pi extensions, skills, prompts, providers, steering, session trees, and deeper runtime controls stay available.
 
-Other harnesses advertise their capabilities rather than being forced into a lowest-common-denominator interface. The UI can expose richer controls when a selected harness supports them.
+Each harness advertises its own capabilities rather than being forced into a lowest-common-denominator interface, so the app exposes richer controls whenever a selected harness supports them.
 
 | Harness | Integration | Status |
 |---|---|---|
