@@ -627,16 +627,17 @@ This design is large enough to require a roadmap before detailed implementation 
 - Put current session read/mutation and model-list behavior behind backend methods.
 - Ensure routes no longer coordinate Pi lifecycle directly.
 
-### Phase 4: `/api/v1` agent vertical slice
+### Phase 4: `/api/v1` discovery and read-only session slice
 
-- Add health, capabilities, models, sessions, state, events, prompt, abort, steer, and follow-up adapters.
+- Add health, capabilities, models, session list/detail/context/thinking, runtime state, and running-session adapters.
 - Add consistent envelope and error mapping tests.
+- Migrate the browser's read calls (startup, sidebar refresh, cold load, running reconciliation, model selection) to the shared typed client.
 
-### Phase 5: Web client migration
+### Phase 5: Session creation, core commands, and SSE cutover
 
-- Consolidate browser access in the typed client.
-- Move agent/session/model UI traffic to `/api/v1`.
-- Retain compatibility routes over the same backend.
+- Add session creation, prompt/abort/steer/follow-up/queue adapters, and per-session and running-session SSE.
+- Migrate the browser's creation prompts, commands, and streams to `/api/v1`.
+- Retain the legacy combined create-and-prompt route as a composing adapter.
 
 ### Phase 6: Remaining API roadmap
 
