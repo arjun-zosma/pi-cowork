@@ -83,7 +83,7 @@ The machine daemon owns the capabilities every harness needs:
 
 Harness adapters only translate between native harness protocols and Cowork's protocol. We prefer SDKs, JSON-RPC, JSONL, native APIs, and ACP over terminal-screen scraping.
 
-### Pi-first, not Pi-only
+### Agents of your choosing
 
 Cowork plans to support multiple agent harnesses, chosen per employee's job type and the work they do — starting with our favourite, the Pi Coding Agent. Pi remains Cowork's first-class runtime: existing Pi extensions, skills, prompts, providers, steering, session trees, and deeper runtime controls stay available.
 
