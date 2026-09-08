@@ -27,20 +27,12 @@ Cowork is built for more than software development. It is intended for finance, 
 
 <img src="./assets/demo.png" width="100%" alt="Zosma Cowork processing business documents with an AI agent" />
 
-## Why Cowork?
+## What Cowork is
 
-Most agent orchestrators begin with repositories, terminals, and pull requests. Cowork begins with **work**: a goal, its context, the people responsible, the systems involved, the approvals required, and the result the company needs.
+Cowork is a **work-focused** AI agent platform. It begins with **work** — a goal, its context, the people responsible, the systems involved, the approvals required, and the result the company needs. It is built for every company function: finance, operations, research, sales, support, administration, and engineering — not just software development.
 
-| Code-focused orchestration | Zosma Cowork |
-|---|---|
-| Repository is the primary workspace | Task and business context are the primary workspace |
-| Optimized mainly for developers | Designed for every company function |
-| Pull requests and diffs are the main outputs | Documents, reports, records, messages, files, and code are all valid outputs |
-| Usually tied to one coding harness | Pi-first with native and ACP harness adapters |
-| Individual local workflows | Individual, team, and company workflows |
-| Technical execution visibility | Execution visibility plus approvals, policy, ownership, and audit |
-
-Cowork still provides files, Git, worktrees, terminals, tool timelines, and code review. Those are capabilities—not the product boundary.
+## What Cowork is not
+Cowork is not a code-first orchestration tool, nor is it restricted to a single harness. Files, Git, worktrees, terminals, and code review remain available — but they are capabilities that serve the work, not the product's boundary.
 
 ## Product vision
 
