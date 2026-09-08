@@ -27,12 +27,17 @@ Cowork is built for more than software development. It is intended for finance, 
 
 <img src="./assets/demo.png" width="100%" alt="Zosma Cowork processing business documents with an AI agent" />
 
-## What Cowork is
+## What Cowork Is
 
-Cowork is a **work-focused** AI agent platform. It begins with **work** — a goal, its context, the people responsible, the systems involved, the approvals required, and the result the company needs. It is built for every company function: finance, operations, research, sales, support, administration, and engineering — not just software development.
+Cowork is an open-source, MIT-licensed work harness for individuals, small teams, and large organizations. It runs in the cloud or on your own machines, stays provider-agnostic, and lets you use the model of your choice. Thanks to Pi and other open-source packages, Cowork stands on the shoulders of the open-source ecosystem rather than reinventing it.
 
-## What Cowork is not
-Cowork is not a code-first orchestration tool, nor is it restricted to a single harness. Files, Git, worktrees, terminals, and code review remain available — but they are capabilities that serve the work, not the product's boundary.
+## What Cowork Is Not
+
+Cowork is not a coding assistant that opens a folder. It is not tied to a single provider, model, or harness — you choose the tools that fit the work.
+
+## What Cowork Wants to Be
+
+A single, open work platform where a person, a small team, or a whole company can run their AI work across any provider and any model, from any device, under a permissive MIT license — on the infrastructure of their choosing.
 
 ## Product vision
 
