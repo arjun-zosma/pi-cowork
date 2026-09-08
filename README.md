@@ -289,11 +289,9 @@ Development commands will change as the repository moves to the target pnpm work
 5. **Open-source honest.** No dark patterns, hidden execution, or artificial engagement loops.
 6. **Boring infrastructure wins.** Start with a modular monolith and one daemon; split only when measured constraints demand it.
 
-## Open-source and clean-room development
+## Open-source
 
-Zosma Cowork is released under the permissive [MIT License](LICENSE). We study public protocols, product behavior, and architecture across the agent ecosystem, but do not copy AGPL implementation code into this repository. Integrations are independently implemented in TypeScript using public specifications and supported harness interfaces.
-
-Third-party harnesses, models, extensions, and services retain their own licenses and terms.
+Zosma Cowork is released under the permissive MIT License. Third-party harnesses, models, extensions, and services keep their own licenses and terms.
 
 ## Contributing
 
