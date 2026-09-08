@@ -39,6 +39,16 @@ Cowork is not a coding assistant that opens a folder. It is not tied to a single
 
 A single, open work platform where a person, a small team, or a whole company can run their AI work across any provider and any model, from any device, under a permissive MIT license — on the infrastructure of their choosing.
 
+## Our Goal
+
+To work with agents as seamlessly as possible.
+
+Chat, get notifications of clarifications, information, and approvals — and schedule repeated tasks as you talk to the harness.
+
+The agents create skills, learn from past experiences, and grow the more you use them.
+
+That's the goal.
+
 ## Product vision
 
 A company installs one lightweight Cowork daemon on each employee machine or managed server. The daemon discovers and supervises supported agent harnesses, keeps credentials and execution local, and opens an authenticated outbound connection to the Cowork backend.
