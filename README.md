@@ -1,4 +1,3 @@
-<div align="center">
 
 # Zosma Cowork 🇮🇳
 
@@ -17,7 +16,6 @@ Run AI coworkers across employee machines, servers, and harnesses from one secur
 
 [Documentation](https://cowork.zosma.ai) · [Releases](https://github.com/zosmaai/zosma-cowork/releases/latest) · [Roadmap](#roadmap) · [Discord](https://discord.com/invite/HQcyTD5jHA)
 
-</div>
 
 ---
 
@@ -307,11 +305,9 @@ Before starting a large change, open an issue or join the [Discord community](ht
   <img src="https://contrib.rocks/image?repo=zosmaai/zosma-cowork" alt="Contributors" />
 </a>
 
-<div align="center">
   <a href="https://github.com/zosmaai/zosma-cowork/stargazers">
     <img src="./assets/thank-you-for-the-star.png" alt="Thank you for starring Zosma Cowork" width="100%" />
   </a>
-</div>
 
 ## Made in India 🇮🇳
 
