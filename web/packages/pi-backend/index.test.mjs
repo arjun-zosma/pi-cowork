@@ -77,3 +77,43 @@ test("PiBackend.getModels delegates to the model service", async () => {
     rmSync(cwd, { recursive: true, force: true });
   }
 });
+
+test("PiBackend.getRunningSessionIds delegates to the runtime manager", async () => {
+  const state = { registry: new Map(), startLocks: new Map(), startingSessionCwds: new Map(), runningListeners: new Set() };
+  state.registry.set("idle-session", { isAlive: () => true, isRunning: () => true, sessionId: "idle-session", cwd: "/tmp" });
+  const backend = createPiBackend({ piVersion: "0.84.2", runtime: createRuntimeManager(state, async () => { throw new Error("factory unused"); }) });
+  assert.deepEqual(await backend.getRunningSessionIds(), ["idle-session"]);
+});
+
+test("PiBackend.getAgentState reports live state, running:false, or session_not_found", async () => {
+  const state = { registry: new Map(), startLocks: new Map(), startingSessionCwds: new Map(), runningListeners: new Set() };
+  state.registry.set("live-session", {
+    isAlive: () => true,
+    send: async () => ({ model: { id: "m", provider: "p" }, messageCount: 3 }),
+    sessionId: "live-session",
+  });
+  const backend = createPiBackend({ piVersion: "0.84.2", runtime: createRuntimeManager(state, async () => { throw new Error("factory unused"); }) });
+  const live = await backend.getAgentState({ sessionId: "live-session" });
+  assert.equal(live.running, true);
+  assert.equal(live.state.messageCount, 3);
+});
+
+test("PiBackend.getAgentState uses path existence to distinguish idle from missing", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "pi-backend-state-"));
+  try {
+    const filePath = join(dir, "session.jsonl");
+    writeFileSync(filePath, `${JSON.stringify({ type: "session", version: 3, id: "cold-session", timestamp: "2026-01-01T00:00:00.000Z", cwd: dir })}\n`);
+    cacheSessionPath("cold-session", filePath);
+    globalThis.__piSessionListCache = undefined;
+    globalThis.__piSessionListGeneration = 0;
+    const backend = createPiBackend({ piVersion: "0.84.2", runtime: createRuntimeManager({ registry: new Map(), startLocks: new Map(), startingSessionCwds: new Map(), runningListeners: new Set() }, async () => { throw new Error("factory unused"); }) });
+    const idle = await backend.getAgentState({ sessionId: "cold-session" });
+    assert.deepEqual(idle, { running: false });
+    await assert.rejects(
+      backend.getAgentState({ sessionId: "no-such-session" }),
+      (error) => error instanceof Error && error.code === "session_not_found" && error.message === "Session not found",
+    );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

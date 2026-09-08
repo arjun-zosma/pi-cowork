@@ -1,4 +1,5 @@
 import type {
+  AgentStateResponse,
   AutoNameResponse,
   CapabilitiesResponse,
   HealthResponse,
@@ -20,8 +21,10 @@ import {
   getSessionThinking as getSessionThinkingFromServices,
   listSessions as listSessionsFromServices,
   renameSession as renameSessionFromServices,
+  resolveSessionPath,
 } from "./sessions";
 import { getModels as getModelsFromServices } from "./models";
+import { BackendError } from "./errors";
 import { getRuntimeManager } from "../../lib/runtime-state";
 import type { RuntimeManager } from "./runtime-manager";
 
@@ -45,6 +48,10 @@ export interface PiBackend {
   getSessionThinking(
     input: SessionIdInput & { entryId: string; blockIndex: number },
   ): Promise<{ thinking: string }>;
+  getRunningSessionIds(): Promise<string[]>;
+  getAgentState(
+    input: SessionIdInput,
+  ): Promise<{ running: boolean; state?: AgentStateResponse }>;
 }
 
 export interface CreatePiBackendOptions {
@@ -102,6 +109,23 @@ export function createPiBackend(options: CreatePiBackendOptions): PiBackend {
     },
     getSessionThinking(input) {
       return getSessionThinkingFromServices(input);
+    },
+    async getRunningSessionIds() {
+      return runtime().getRunningSessionIds();
+    },
+    async getAgentState(input) {
+      const manager = runtime();
+      const session = manager.getSession(input.sessionId);
+      if (session?.isAlive()) {
+        return {
+          running: true,
+          state: (await session.send({ type: "get_state" })) as AgentStateResponse,
+        };
+      }
+      if (!(await resolveSessionPath(input.sessionId))) {
+        throw new BackendError("session_not_found", "Session not found");
+      }
+      return { running: false };
     },
     getModels(input) {
       return getModelsFromServices(input.cwd);
