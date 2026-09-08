@@ -7,9 +7,14 @@ import { createV1Jiti } from "../test-helper.mjs";
 
 const jiti = createV1Jiti();
 const { GET } = await jiti.import(new URL("./route.ts", import.meta.url).href);
+const { allowFileRoot } = await jiti.import("@/lib/file-access");
 
 test("GET /api/v1/models returns the model catalog under { data }", async () => {
   const dir = mkdtempSync(join(tmpdir(), "api-v1-models-"));
+  // Seed the throwaway temp dir as an allowed root exactly as the real app
+  // does on default-cwd/worktrees writes, so the file-access guard doesn't
+  // reject it when no sessions live under the machine's tmpdir (e.g. CI).
+  allowFileRoot(dir);
   try {
     const res = await GET(new Request(`http://localhost/api/v1/models?cwd=${encodeURIComponent(dir)}`));
     assert.equal(res.status, 200);
